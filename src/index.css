@@ -1,0 +1,15 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+html, body{
+  font-family: 'Inter', sans-serif;
+}
+
+.task-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.task-scroll::-webkit-scrollbar-thumb {
+  background: #d8d3ce;
+  border-radius: 999px;
+}
