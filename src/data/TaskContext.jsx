@@ -1,58 +1,40 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react'
+import {
+    fetchTasks,
+    fetchStats,
+    createTask,
+    updateTaskApi,
+    deleteTaskApi,
+} from '../api/taskApi'
 
-const TaskContext = createContext(null);
-
-const initialTasks = Array.from({ length: 4}).map((_, i) => ({
-    id: i + 1,
-    title: 'Fix Bug on Login Page',
-    description: 'Session Tokens drops on Refresh!, users bounced to /login',
-    category: 'Frontend',
-    status: 'In progress',
-    created: 'Jul 12'
-}))
+const TaskContext = createContext(null)
 
 const CATEGORIES = ['Frontend', 'Backend', 'QA', 'DevOps']
-const STATUSES = ['Pending', 'In progress', 'Completed']
+const STATUSES = ['Pending', 'In Progress', 'Completed']
 
-export function TaskProvider({children}) {
-    const [tasks, setTasks] = useState(initialTasks);
+export function TaskProvider({ children }) {
+    const [tasks, setTasks] = useState([])
+    const [stats, setStats] = useState({
+        all: 0,
+        pending: 0,
+        inProgress: 0,
+        completed: 0,
+    })
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
-    const addTask = (task) => {
-        setTasks((prev) => [{
-            id: prev.length ? Math.max(...prev.map((t) => t.id)) +1 : 1,
-            created: 'Jul 12',
-            ...task,
-        },
-        ...prev,
-    ])
+    const loadTasks = async () => {
+        try {
+            setLoading(true)
+            coonst [tasksdata, statsData] = await Promise.all([fetchTasks(), fetchStats()])
+            setTasks(tasksdata)
+            setStats(statsData)
+            setError(null)
+        } catch (err) {
+            setError('Failed to load tasks. Make sure the backend is running.')
+        } finally {
+            setLoading(false)
+        }
     }
-
-    const updateTask = (id, updates) => {
-        setTasks((prev) => prev.map((t) => (t.id === id ? {...t, ...updates} : t)))
-    }
-
-    const deleteTask = (id) => {
-        setTasks((prev) => prev.filter((t) => t.id !== id))
-    }
-
-    const stats = {
-        all: tasks.length,
-        pending: tasks.filter((t) => t.status === 'Pending').length,
-        inProgress: tasks.filter((t) => t.status === 'In progress').length,
-        completed: tasks.filter((t) => t.status === 'Completed').length,
-    }
-
-    return (
-        <TaskContext.Provider value={{ tasks, addTask, updateTask, deleteTask, stats }}>
-            {children}
-        </TaskContext.Provider>
-    )
+    useEffect(() => loadTasks())
 }
-
-export function useTasks() {
-    const ctx = useContext(TaskContext)
-    if (!ctx) throw new Error('useTasks must be used within a TaskProvider')
-    return ctx
-}
-
-export {CATEGORIES, STATUSES}

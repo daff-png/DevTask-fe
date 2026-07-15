@@ -20,7 +20,7 @@ export default function Overview() {
     const filtered = category === 'All Categories' ? tasks : tasks.filter((t) => t.category === category)
 
     return (
-        <div className="flex-1 px-10 py-8">
+        <div className="flex-1 px-10 py-8 overflow-hidden">
             <PageHeader eyebrow="Dashboard" title="Overview" />
 
             <div className="grid grid-cols-4 gap-5 mb-6">
@@ -30,7 +30,7 @@ export default function Overview() {
                 <StatCard label="Completed" value={stats.completed} dot="green" tone="mint" />
             </div>
 
-            <div className="bg-white rounded-2xl shadow p-6">
+            <div className="bg-white rounded-2xl shadow p-6 h-full flex flex-col">
                 <div className="flex items-center justify-between mb-5">
                     <div>
                         <p className="text-sm font-medium text-ledger-ink mb-2">Category</p>
@@ -57,7 +57,7 @@ export default function Overview() {
                     </button>
                 </div>
 
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto max-h-[55vh] overflow-y-auto">
                     <table className="w-full text-sm">
                         <thead>
                             <tr className="text-left text-ledger-muted border-b border-ledger-ink/5">
@@ -68,7 +68,7 @@ export default function Overview() {
                                 <th className="py-2 font-medium text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="task-scroll">
+                        <tbody>
                             {filtered.map((task) => (
                                 <tr key={task.id} className="border-b border-ledger-ink/5 last:border-0">
                                     <td className="py-4 pr-4 max-w-sm">
@@ -104,6 +104,7 @@ export default function Overview() {
                         </tbody>
                     </table>
                 </div>
+
             </div>
 
             <DeleteModal

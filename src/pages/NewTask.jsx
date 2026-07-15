@@ -8,7 +8,11 @@ export default function NewTask() {
     const navigate = useNavigate()
 
     return (
-        <TaskForm eyebrow="Create Task" title="New Task" submitLabel="Add Task" onSubmit={(form) => {addTask(form) 
-        navigate('/')}}/>
+        <TaskForm eyebrow="Create Task" title="New Task" submitLabel="Add Task" onSubmit={(form) => {
+            addTask(form)
+            navigate('/')
+        }}
+        onCancel={() => navigate('/')}
+      />
     )
 }

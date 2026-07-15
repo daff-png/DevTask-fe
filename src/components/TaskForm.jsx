@@ -48,6 +48,13 @@ export default function TaskForm({ eyebrow, title, initial, submitLabel, onSubmi
                     ))}
                 </div>
 
+                <p className="text-sm font-medium text-ledger-ink mb-2">Status</p>
+                <div className="flex flex-wrap gap-2 mb-5">
+                    {STATUSES.map((status) => (
+                        <PillButton key={status} active={form.status === status} onClick={() => setForm({ ...form, status })}>{status}</PillButton>
+                    ))}
+                </div>
+
                 <div className="flex gap-3">
                     <button type="submit" className="bg-ledger-ink text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:bg-black transition-colors">
                         {submitLabel}
