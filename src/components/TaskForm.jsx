@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PageHeader from './PageHeader';
 import { CATEGORIES, STATUSES } from '../data/TaskContext';
 
@@ -7,6 +7,12 @@ export default function TaskForm({ eyebrow, title, initial, submitLabel, onSubmi
         initial ?? { title: '', description: '', category: 'Frontend', status: 'Pending' }
     )
     const [error, setError] = useState(false)
+
+    useEffect(() => {
+        if (initial) {
+            setForm(initial)
+        }
+    }, [initial])
 
     const handleSubmit = (e) => {
         e.preventDefault()

@@ -4,15 +4,19 @@ import TaskForm from '../components/TaskForm.jsx'
 import { useTasks } from '../data/TaskContext.jsx'
 
 export default function NewTask() {
-    const { addTask } = useTasks()
-    const navigate = useNavigate()
+  const { addTask } = useTasks()
+  const navigate = useNavigate()
 
-    return (
-        <TaskForm eyebrow="Create Task" title="New Task" submitLabel="Add Task" onSubmit={(form) => {
-            addTask(form)
-            navigate('/')
-        }}
-        onCancel={() => navigate('/')}
-      />
-    )
+  return (
+    <TaskForm
+      eyebrow="Create Task"
+      title="New Task"
+      submitLabel="Add Task"
+      onSubmit={async (form) => {
+        await addTask(form)
+        navigate('/')
+      }}
+      onCancel={() => navigate('/')}
+    />
+  )
 }

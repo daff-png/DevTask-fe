@@ -1,11 +1,12 @@
-import axios from "axios";
+import axios from 'axios'
 
 const api = axios.create({
-    baseURL: 'htttp://localhost:5000/api/tasks',
+  baseURL: 'http://localhost:5000/api/tasks',
 })
 
-export const fetchTask = () => api.get('/').then((res) => res.data)
+export const fetchTasks = () => api.get('/').then((res) => res.data)
 export const fetchStats = () => api.get('/stats').then((res) => res.data)
-export const createTask = (task) => api.post('/', task).then((res) => res.data)
-export const updateTask = (id, task) => api.put(`/${id}`, task).then((res) => res.data)
-export const deleteTask = (id) => api.delete(`/${id}`)
+export const fetchTaskById = (id) => api.get(`/${id}`).then((res) => res.data)
+export const createTask = (data) => api.post('/', data).then((res) => res.data)
+export const updateTaskApi = (id, data) => api.put(`/${id}`, data).then((res) => res.data)
+export const deleteTaskApi = (id) => api.delete(`/${id}`)
