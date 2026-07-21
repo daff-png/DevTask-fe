@@ -6,6 +6,7 @@ import {
   updateTaskApi,
   deleteTaskApi,
 } from '../api/taskApi.js'
+import { useAuth } from './AuthContext.jsx'
 
 const TaskContext = createContext(null)
 
@@ -21,6 +22,7 @@ const normalizeTasks = (value) => {
 }
 
 export function TaskProvider({ children }) {
+  const { user, token } = useAuth()
   const [tasks, setTasks] = useState([])
   const [stats, setStats] = useState({ all: 0, pending: 0, inProgress: 0, completed: 0 })
   const [loading, setLoading] = useState(true)
@@ -113,8 +115,15 @@ export function TaskProvider({ children }) {
   }
 
   useEffect(() => {
-    loadTasks()
-  }, [])
+    if (token) {
+      loadTasks()
+    } else {
+      setTasks([])
+      setStats({ all: 0, pending: 0, inProgress: 0, completed: 0 })
+      setError(null)
+      setLoading(false)
+    }
+  }, [token])
 
   const addTask = async (task) => {
     await createTask(task)
