@@ -113,7 +113,7 @@ export default function Sidebar() {
         </div>
       )}
 
-      <aside className="hidden md:flex w-64 shrink-0 bg-white flex-col justify-between py-8 px-6 min-h-screen">
+      <aside className="hidden md:flex sticky top-0 self-start w-64 shrink-0 bg-white flex-col justify-between py-8 px-6 min-h-screen">
         {content}
       </aside>
     </>
