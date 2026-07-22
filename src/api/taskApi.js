@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'https://devtask-be-production.up.railway.app/api/tasks',
+  baseURL: 'http://12.105.0.1:3010/api/tasks',
 })
 
 function authHeader() {
@@ -28,3 +28,4 @@ export const updateTaskApi = (id, data) =>
 
 export const deleteTaskApi = (id) =>
   api.delete(`/${id}`, { headers: authHeader() }).then(unwrapData)
+

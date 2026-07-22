@@ -1,74 +1,55 @@
 import React from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Sidebar from './components/Sidebar.jsx'
-import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Overview from './pages/Overview.jsx'
 import NewTask from './pages/NewTask.jsx'
 import EditTask from './pages/EditTask.jsx'
 import Login from './pages/Login.jsx'
-import { useAuth } from './data/AuthContext.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
+import { TaskProvider } from './data/TaskContext.jsx'
+import { AuthProvider } from './data/AuthContext.jsx'
+import { NotificationProvider } from './data/NotificationContext.jsx'
 
-function AppShell({ children }) {
+function Layout({ children }) {
   return (
-    <div className="min-h-screen bg-ledger-bg flex">
-      <Sidebar />
-      <main className="flex-1">{children}</main>
-    </div>
+      <div className="min-h-screen bg-ledger-bg flex flex-col md:flex-row">
+        <Sidebar />
+        <main className="flex-1 bg-ledger-panel min-h-screen">{children}</main>
+      </div>
   )
 }
 
 export default function App() {
-  const { user, loading } = useAuth()
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-ledger-bg flex items-center justify-center">
-        <p className="text-ledger-muted text-sm">Loading...</p>
-      </div>
-    )
-  }
-
   return (
-    <Routes>
-      <Route
-        path="/login"
-        element={user ? <Navigate to="/" replace /> : <Login />}
-      />
-
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <AppShell>
-              <Overview />
-            </AppShell>
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/tasks/new"
-        element={
-          <ProtectedRoute allowedRoles={['PM']}>
-            <AppShell>
-              <NewTask />
-            </AppShell>
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/tasks/:id/edit"
-        element={
-          <ProtectedRoute allowedRoles={['PM']}>
-            <AppShell>
-              <EditTask />
-            </AppShell>
-          </ProtectedRoute>
-        }
-      />
-
-      <Route path="*" element={<Navigate to={user ? '/' : '/login'} replace />} />
-    </Routes>
+    <AuthProvider>
+      <NotificationProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute>
+                <TaskProvider>
+                  <Layout>
+                    <Routes>
+                    <Route path="/" element={<Overview />} />
+                    <Route
+                      path="/tasks/new"
+                      element={
+                        <ProtectedRoute allowedRoles={['PM']}>
+                          <NewTask />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route path="/tasks/:id/edit" element={<EditTask />} />
+                  </Routes>
+                </Layout>
+              </TaskProvider>
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+      </NotificationProvider>
+    </AuthProvider>
   )
 }

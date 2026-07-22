@@ -21,10 +21,10 @@ export default function TaskForm({ eyebrow, title, initial, submitLabel, onSubmi
   }
 
   return (
-    <div className="flex-1 px-10 py-8">
+    <div className="flex-1 px-4 py-5 md:px-10 md:py-8">
       <PageHeader eyebrow={eyebrow} title={title} />
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-card p-6 max-w-xl">
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-card p-4 md:p-6 w-full md:max-w-xl">
         <label className="block text-sm font-medium text-ledger-ink mb-1.5">
           Title{isPM && <span className="text-red-500">*</span>}
         </label>

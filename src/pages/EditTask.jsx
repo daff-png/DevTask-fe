@@ -2,6 +2,7 @@ import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import TaskForm from '../components/TaskForm.jsx'
 import { useTasks } from '../data/TaskContext.jsx'
+import { useNotifications } from '../data/NotificationContext.jsx'
 
 export default function EditTask() {
     const { tasks, updateTask, loading } = useTasks()
@@ -32,8 +33,13 @@ export default function EditTask() {
             initial={task}
             submitLabel="Save Changes"
             onSubmit={async (form) => {
-                await updateTask(task._id, form)
-                navigate('/')
+                try {
+                    await updateTask(task._id, form)
+                    notify('Task updated successfully.')
+                    navigate('/')
+                } catch (err) {
+                    notify(err.response?.data?.message || 'Failed to update task', 'error')
+                }
             }}
             onCancel={() => navigate('/')}
         />

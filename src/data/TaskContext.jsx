@@ -27,6 +27,9 @@ export function TaskProvider({ children }) {
   const [stats, setStats] = useState({ all: 0, pending: 0, inProgress: 0, completed: 0 })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [category, setCategory] = useState('All Categories')
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(10)
 
   const normalizeStats = (value) => {
     if (!value || typeof value !== 'object') {
@@ -125,6 +128,20 @@ export function TaskProvider({ children }) {
     }
   }, [token])
 
+  // derive pagination from loaded tasks and current page/limit
+  const pagination = {
+    total: Number(tasks.length ?? 0),
+    limit: Number(limit ?? 10),
+    page: Number(page ?? 1),
+    totalPages: Math.max(1, Math.ceil((Number(tasks.length ?? 0) || 0) / (Number(limit ?? 10) || 1))),
+  }
+
+  useEffect(() => {
+    if (page > pagination.totalPages) {
+      setPage(pagination.totalPages)
+    }
+  }, [page, pagination.totalPages])
+
   const addTask = async (task) => {
     await createTask(task)
     await loadTasks()
@@ -142,7 +159,24 @@ export function TaskProvider({ children }) {
 
   return (
     <TaskContext.Provider
-      value={{ tasks, stats, loading, error, addTask, updateTask, deleteTask }}
+      value={{
+        tasks,
+        stats,
+        loading,
+        error,
+        addTask,
+        updateTask,
+        deleteTask,
+        // UI state used by Overview
+        category,
+        changeCategory: (c) => {
+          setCategory(c)
+          setPage(1)
+        },
+        page,
+        setPage,
+        pagination,
+      }}
     >
       {children}
     </TaskContext.Provider>

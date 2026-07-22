@@ -1,7 +1,8 @@
+
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: 'https://devtask-be-production.up.railway.app/api/auth',
+    baseURL: 'http://12.105.0.1:3010/api/auth',
 })
 
 export const loginApi = (email, password) => api.post('/login', {
